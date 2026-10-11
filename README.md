@@ -138,4 +138,4 @@ npm publish
 
 ## Disclaimer
 
-Unofficial, independent, not affiliated with or endorsed by Papertrade. Not financial advice. Provided as is under the MIT license with no warranty. Copy trading at up to 1000x leverage can lose your entire margin. Only use funds you can afford to lose.
+Unofficial, independent, not affiliated with or endorsed by Papertrade. Not financial advice. Provided as is under the Apache-2.0 license with no warranty. Copy trading at up to 1000x leverage can lose your entire margin. Only use funds you can afford to lose.

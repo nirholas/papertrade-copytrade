@@ -2,7 +2,7 @@
   "name": "papertrade-copytrade",
   "version": "0.1.0",
   "description": "Unofficial copy-trading CLI and library for Papertrade (1000x synthetic perps on HyperEVM): rank leaders, mirror their opens and closes with a trading-only session key, behind hard guardrails. Dry run by default.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "author": "nirholas",
   "type": "module",
   "main": "./dist/index.js",
