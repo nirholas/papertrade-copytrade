@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "papertrade-copytrade"
+abstract: "Copy-trading CLI and library for Papertrade 1000x perps on HyperEVM: rank leaders, mirror trades with a trading-only session key behind hard guardrails. Dry run by default."
+license: Apache-2.0
+repository-code: "https://github.com/nirholas/papertrade-copytrade"
+url: "https://papertrade-copytrade.pages.dev"
+keywords: [papertrade, hyperliquid, hyperevm, perps, defi]
+authors:
+  - name: three.ws
+    website: "https://three.ws"

@@ -40,7 +40,18 @@
     "hyperevm",
     "hyperliquid",
     "trading-bot",
-    "cli"
+    "cli",
+    "social-trading",
+    "perpetuals",
+    "npx",
+    "session-keys",
+    "risk-management",
+    "defi",
+    "typescript",
+    "crypto",
+    "web3",
+    "leaderboard",
+    "automated-trading"
   ],
   "engines": {
     "node": ">=20"
