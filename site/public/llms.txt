@@ -1,0 +1,27 @@
+# papertrade-copytrade
+
+> Unofficial copy-trading CLI and TypeScript library for Papertrade (https://papertrade.xyz), the on-chain 1000x synthetic perps exchange on HyperEVM (chain 999). Not affiliated with Papertrade. 1000x leverage can lose the whole margin.
+
+Install and run: `npx papertrade-copytrade --help`. Node 20 or newer.
+
+## What it does
+- `leaders`: ranks live Papertrade wallets with stats derived from their closed trades (win rate, liquidation rate, average leverage, windowed PnL).
+- `inspect <address>`: one wallet's stats and open positions.
+- `follow <address...>`: streams each leader's live wallet feed and mirrors opens and closes into the follower account with a trading-only session key.
+- `check --config <file>`: validates a config and prints the resolved guardrails.
+
+## Safety model (agents must keep it)
+- Dry run is the default. `--live` additionally needs PAPERTRADE_WALLET_KEY and the typed phrase "start live copying" in an interactive terminal.
+- PAPERTRADE_WALLET_KEY only registers a session key. The session key can open and close positions and can never withdraw. Keys are never logged.
+- Every guardrail is required: max margin per trade, max total open margin, max leverage, max open positions, daily realized-loss stop, markets allowlist, cooldown, kill switch file, slippage guard.
+- Protocol minimums ($10 margin, $10,000 notional) are respected; a copy that cannot meet them is skipped with a logged reason.
+- Never run `follow --live` on behalf of a user without their explicit instruction.
+
+## Library
+`import { planEvent, planDue, diffLeader, resolveConfig, CopyEngine, rankLeaders, computeTradeStats } from 'papertrade-copytrade'`. The planner is pure: leader event and follower state in, actions out.
+
+## Links
+- Source: https://github.com/nirholas/papertrade-copytrade
+- Site and config builder: https://papertrade-copytrade.pages.dev
+- Docs: README.md, AGENTS.md
+- Related: https://github.com/nirholas/papertrade-sdk, https://github.com/nirholas/papertrade-ai

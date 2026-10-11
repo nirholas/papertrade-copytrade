@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>papertrade-copytrade: copy-trading CLI for Papertrade perps</title>
+  <meta name="description" content="Unofficial copy-trading CLI for Papertrade, the 1000x synthetic perps exchange on HyperEVM. Rank live leaders, then mirror their trades with a trading-only session key behind hard guardrails. Dry run by default.">
+  <link rel="canonical" href="https://papertrade-copytrade.pages.dev/">
+  <meta property="og:title" content="papertrade-copytrade">
+  <meta property="og:description" content="Explore Papertrade leaders and build a guarded copy-trading command. Dry run by default.">
+  <meta property="og:url" content="https://papertrade-copytrade.pages.dev/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="color-scheme" content="light dark">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f59e0b'/%3E%3Cpath d='M8 12h11m0 0l-3-3m3 3l-3 3M24 20H13m0 0l3-3m-3 3l3 3' stroke='%23201400' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"papertrade-copytrade","description":"Unofficial copy-trading CLI and library for the Papertrade synthetic perps exchange on HyperEVM.","codeRepository":"https://github.com/nirholas/papertrade-copytrade","programmingLanguage":"TypeScript","license":"https://opensource.org/licenses/MIT","author":{"@type":"Person","name":"nirholas"}}
+  </script>
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="risk-bar" role="note"><strong>Unofficial, not affiliated with Papertrade.</strong> 1000x leverage can lose your whole margin in seconds. A leader's past results predict nothing.</div>
+  <header class="top">
+    <span class="brand"><span class="mark" aria-hidden="true"></span>papertrade-copytrade</span>
+    <nav aria-label="Primary">
+      <a href="#leaders">Leaders</a>
+      <a href="#builder">Config builder</a>
+      <a href="#how">How it works</a>
+      <a href="https://github.com/nirholas/papertrade-copytrade">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <h1>Mirror a leader. Keep every guardrail.</h1>
+      <p class="lede">A command-line copier for Papertrade perps. It watches a leader's live wallet stream, opens and closes the same positions in your account with a trading-only session key, and stops at limits you set first. Dry run is the default.</p>
+      <pre class="install"><code>npx papertrade-copytrade leaders</code></pre>
+    </section>
+
+    <section id="leaders" aria-labelledby="leaders-h">
+      <div class="section-head">
+        <h2 id="leaders-h">Leader explorer</h2>
+        <p id="status" class="status" data-kind="wait" role="status" aria-live="polite">Loading live leaderboard</p>
+      </div>
+      <form class="controls" id="leader-controls" aria-label="Leader filters">
+        <label>Window
+          <select id="window"><option value="24h">24 hours</option><option value="7d">7 days</option><option value="30d">30 days</option><option value="all">All time</option></select>
+        </label>
+        <label>Sort by
+          <select id="sort"></select>
+        </label>
+        <label>Min trades
+          <input id="min-trades" type="number" min="0" max="75" step="1" value="3" inputmode="numeric">
+        </label>
+        <button id="refresh" class="btn" type="button">Refresh</button>
+      </form>
+      <div id="leaders-body" class="table-wrap" aria-live="polite" aria-busy="true"></div>
+      <p class="fine">Stats come from each wallet's most recent closed trades (up to 150) read from the public API. Trades inside the window only. Small samples mislead, so check the trade count.</p>
+    </section>
+
+    <section id="builder" aria-labelledby="builder-h">
+      <h2 id="builder-h">Config builder</h2>
+      <div class="risk-box" role="note">
+        <strong>Read this before you copy anything.</strong>
+        <ul>
+          <li>Papertrade leverage goes to 1000x. A 0.1% adverse move can liquidate a 1000x position and lose its entire margin.</li>
+          <li>Copies open after the leader, at a different price, with slippage and fees. You will not match a leader's results.</li>
+          <li>Only fund the follower account with money you can lose. The guardrails below limit exposure, they do not remove risk.</li>
+          <li>The generated command is a dry run. It signs nothing for submission. Going live is a separate, deliberate step in your terminal.</li>
+        </ul>
+      </div>
+      <div class="builder-grid">
+        <form id="builder-form" class="panel" novalidate>
+          <fieldset>
+            <legend>Who</legend>
+            <label>Follower account
+              <input id="f-account" type="text" autocomplete="off" spellcheck="false" placeholder="0x... your Papertrade account" aria-describedby="account-help">
+            </label>
+            <p id="account-help" class="help">Your wallet address. Its key stays in your terminal as PAPERTRADE_WALLET_KEY and is never entered here.</p>
+            <label>Leaders to follow (one address per line, up to 10)
+              <textarea id="f-leaders" rows="3" spellcheck="false" placeholder="Pick leaders from the table above or paste addresses"></textarea>
+            </label>
+          </fieldset>
+          <fieldset>
+            <legend>Sizing</legend>
+            <div class="row">
+              <label>Mode
+                <select id="f-sizing"><option value="fixed">Fixed margin per trade</option><option value="proportional">Multiple of the leader's margin</option><option value="percent">Percent of my balance</option></select>
+              </label>
+              <label><span id="f-sizing-label">USD margin</span>
+                <input id="f-sizing-value" type="number" min="0" step="any" value="250" inputmode="decimal">
+              </label>
+            </div>
+            <div class="row">
+              <label>Leverage
+                <select id="f-leverage"><option value="copy">Copy the leader's</option><option value="cap">Copy, capped at</option><option value="fixed">Always use</option></select>
+              </label>
+              <label>Leverage value
+                <input id="f-leverage-value" type="number" min="1" max="1000" step="1" value="20" inputmode="numeric">
+              </label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Guardrails (all required)</legend>
+            <div class="row">
+              <label>Max margin per trade (USD)<input id="g-trade" type="number" min="0" step="any" value="300" inputmode="decimal"></label>
+              <label>Max total open margin (USD)<input id="g-total" type="number" min="0" step="any" value="1000" inputmode="decimal"></label>
+            </div>
+            <div class="row">
+              <label>Max leverage<input id="g-lev" type="number" min="1" max="1000" step="1" value="50" inputmode="numeric"></label>
+              <label>Max open positions<input id="g-positions" type="number" min="1" step="1" value="3" inputmode="numeric"></label>
+            </div>
+            <div class="row">
+              <label>Daily realized loss stop (USD)<input id="g-loss" type="number" min="0" step="any" value="200" inputmode="decimal"></label>
+              <label>Cooldown per market (seconds)<input id="g-cooldown" type="number" min="0" step="1" value="30" inputmode="numeric"></label>
+            </div>
+            <div class="row">
+              <label>Slippage guard (% from leader entry)<input id="g-slip" type="number" min="0" step="any" value="0.5" inputmode="decimal"></label>
+              <label>Skip leader opens older than (seconds)<input id="g-age" type="number" min="1" step="1" value="60" inputmode="numeric"></label>
+            </div>
+            <label>Kill switch file
+              <input id="g-kill" type="text" value="./STOP" autocomplete="off" spellcheck="false">
+            </label>
+            <p class="help">Create this file at any time to stop new copies.</p>
+            <div id="g-markets" class="checks" role="group" aria-label="Markets allowlist"><span class="skeleton"></span></div>
+          </fieldset>
+          <fieldset>
+            <legend>Behavior</legend>
+            <label class="check"><input id="o-existing" type="checkbox"> Also copy positions the leader already holds when I start</label>
+            <label class="check"><input id="o-flatten" type="checkbox"> When the kill switch appears, close every mirrored position</label>
+          </fieldset>
+        </form>
+
+        <div class="panel out">
+          <div id="validation" class="validation" role="status" aria-live="polite"></div>
+          <h3>Command (dry run)</h3>
+          <div class="codebox"><pre id="out-cmd" tabindex="0"></pre><button class="btn small" type="button" data-copy="out-cmd">Copy</button></div>
+          <h3>copytrade.config.json</h3>
+          <div class="codebox"><pre id="out-json" tabindex="0"></pre><button class="btn small" type="button" data-copy="out-json">Copy</button></div>
+          <h3>Then, when you have watched a dry run and accept the risk</h3>
+          <div class="codebox"><pre id="out-live" tabindex="0"></pre><button class="btn small" type="button" data-copy="out-live">Copy</button></div>
+          <p class="help">Live mode asks you to type a confirmation phrase in an interactive terminal. Use <code>npx papertrade-copytrade check --config copytrade.config.json</code> to validate a saved file.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" aria-labelledby="how-h">
+      <h2 id="how-h">How it works</h2>
+      <ol class="steps">
+        <li><strong>Stream.</strong> The leader's wallet feed is read live from Papertrade. Each open and close arrives as an event.</li>
+        <li><strong>Plan.</strong> A pure planner turns the event into an action: size it, apply the leverage rule, enforce the protocol minimums ($10 margin, $10,000 notional) and every guardrail, or skip it with a logged reason.</li>
+        <li><strong>Sign.</strong> A session key signs the EIP-712 intent. It can open and close positions and can never withdraw. Your wallet key is used once to register it.</li>
+        <li><strong>Remember.</strong> Leader-to-follower position mapping is saved to a private file, so a restart picks up exactly where it stopped.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Unofficial.</strong> An independent open-source project, not affiliated with or endorsed by Papertrade. Not financial advice. MIT licensed, provided as is, with no warranty. High leverage can lose your whole margin.</p>
+    <p><a href="https://github.com/nirholas/papertrade-copytrade">papertrade-copytrade</a> · <a href="https://github.com/nirholas/papertrade-sdk">papertrade-sdk</a> · <a href="https://github.com/nirholas/papertrade-ai">papertrade-ai</a> · <a href="https://papertrade.xyz">papertrade.xyz</a> · <a href="/llms.txt">llms.txt</a></p>
+  </footer>
+</body>
+</html>

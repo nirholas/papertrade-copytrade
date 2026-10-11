@@ -1,0 +1,75 @@
+{
+  "name": "papertrade-copytrade",
+  "version": "0.1.0",
+  "description": "Unofficial copy-trading CLI and library for Papertrade (1000x synthetic perps on HyperEVM): rank leaders, mirror their opens and closes with a trading-only session key, behind hard guardrails. Dry run by default.",
+  "license": "MIT",
+  "author": "nirholas",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "papertrade-copytrade": "./dist/bin.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "llms.txt"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nirholas/papertrade-copytrade.git"
+  },
+  "homepage": "https://papertrade-copytrade.pages.dev",
+  "bugs": {
+    "url": "https://github.com/nirholas/papertrade-copytrade/issues"
+  },
+  "keywords": [
+    "papertrade",
+    "copy-trading",
+    "copytrade",
+    "perps",
+    "hyperevm",
+    "hyperliquid",
+    "trading-bot",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit -p . && tsc --noEmit -p site/functions",
+    "test": "vitest run",
+    "build:site": "node site/build.mjs",
+    "dev:site": "npm run build:site && cd site && wrangler pages dev --port 8797",
+    "deploy:site": "npm run build:site && cd site && wrangler pages deploy",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "viem": "^2.57.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261010.1",
+    "@types/node": "^26.6.5",
+    "esbuild": "^0.28.2",
+    "papertrade-sdk": "file:../papertrade-sdk-0.1.0.tgz",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.3",
+    "wrangler": "^4.149.0"
+  },
+  "allowScripts": {
+    "workerd@1.20261006.1": true,
+    "esbuild@0.28.2": true,
+    "esbuild@0.27.7": true
+  }
+}

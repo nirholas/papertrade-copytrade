@@ -1,0 +1,10 @@
+node_modules
+dist
+*.tgz
+.env
+.dev.vars
+.wrangler
+site/public/app.js
+site/public/app.js.map
+copytrade-state.json*
+STOP
