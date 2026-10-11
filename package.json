@@ -72,7 +72,7 @@
     "@cloudflare/workers-types": "^5.20261010.1",
     "@types/node": "^26.6.5",
     "esbuild": "^0.28.2",
-    "papertrade-sdk": "file:../papertrade-sdk-0.1.0.tgz",
+    "papertrade-sdk": "github:nirholas/papertrade-sdk",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^5.0.3",
