@@ -170,3 +170,13 @@ Built by [three.ws](https://three.ws).
 ## Disclaimer
 
 Unofficial, independent, not affiliated with or endorsed by Papertrade. Not financial advice. Provided as is under the Apache-2.0 license with no warranty. Copy trading at up to 1000x leverage can lose your entire margin. Only use funds you can afford to lose.
+
+<!-- nirholas:watermark -->
+
+---
+
+<p align="center">
+  Built by <a href="https://github.com/nirholas"><b>nirholas</b></a> · <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://github.com/nirholas">github.com/nirholas</a>
+</p>
+
+<!-- /nirholas:watermark -->
