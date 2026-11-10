@@ -7,8 +7,9 @@
   "plugins": [
     {
       "name": "papertrade-copytrade",
-      "source": "./",
+      "source": "./plugins/papertrade-copytrade",
       "description": "Rank Papertrade leaders and run the guard-railed copy-trading CLI in dry-run mode from Claude Code.",
+      "category": "development",
       "tags": [
         "copy-trading",
         "cli",
