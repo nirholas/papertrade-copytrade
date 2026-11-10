@@ -1,0 +1,18 @@
+{
+  "name": "papertrade-copytrade",
+  "version": "0.1.0",
+  "description": "Rank Papertrade leaders and run the guard-railed copy-trading CLI in dry-run mode from Claude Code.",
+  "author": {
+    "name": "nirholas"
+  },
+  "repository": "https://github.com/nirholas/papertrade-copytrade",
+  "license": "Apache-2.0",
+  "keywords": [
+    "papertrade",
+    "copy-trading",
+    "cli",
+    "perps",
+    "hyperevm"
+  ],
+  "homepage": "https://papertrade-copytrade.pages.dev"
+}
