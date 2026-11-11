@@ -69,7 +69,7 @@
     "viem": "^2.57.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261010.1",
+    "@cloudflare/workers-types": "^5.20261027.1",
     "@types/node": "^26.6.5",
     "esbuild": "^0.28.2",
     "papertrade-sdk": "github:nirholas/papertrade-sdk",
@@ -86,6 +86,8 @@
   "overrides": {
     "tsup": {
       "esbuild": "$esbuild"
-    }
+    },
+    "semver": "7.8.5",
+    "tslib": "2.8.1"
   }
 }
